@@ -1,0 +1,13 @@
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer>ans=new ArrayList<>();
+        inorder_Helper(root,ans);
+        return ans;
+    }
+    private void inorder_Helper(TreeNode root,List<Integer>ans){
+        if(root==null)return;
+        TreeNode node=root;
+        inorder_Helper(node.left,ans);ans.add(node.val);
+        inorder_Helper(node.right,ans);
+    }
+}
