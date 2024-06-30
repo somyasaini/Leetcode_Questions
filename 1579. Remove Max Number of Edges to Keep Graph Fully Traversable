@@ -1,0 +1,74 @@
+import java.util.*;
+
+class Solution {
+    public int maxNumEdgesToRemove(int n, int[][] edges) {
+        int edgeRemovals = 0;
+
+        DSU alice = new DSU(n + 1); 
+        DSU bob = new DSU(n + 1);  
+
+        
+        for (int[] edge : edges) {
+            if (edge[0] == 3) {
+                if (!alice.union(edge[1], edge[2])) edgeRemovals++;
+                else bob.union(edge[1], edge[2]);
+            }
+        }
+
+        
+        for (int[] edge : edges) {
+            if (edge[0] == 1) {
+                if (!alice.union(edge[1], edge[2])) edgeRemovals++;
+            } else if (edge[0] == 2) {
+                if (!bob.union(edge[1], edge[2])) edgeRemovals++;
+            }
+        }
+
+        
+        if (alice.size(1) != n || bob.size(1) != n) return -1;
+
+        return edgeRemovals;
+    }
+
+    
+    class DSU {
+        int[] parent;
+        int[] size;
+
+        public DSU(int n) {
+            parent = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+
+        public int find(int x) {
+            if (x != parent[x]) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+
+        public boolean union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+
+            if (rootX == rootY) return false;
+
+            if (size[rootX] < size[rootY]) {
+                parent[rootX] = rootY;
+                size[rootY] += size[rootX];
+            } else {
+                parent[rootY] = rootX;
+                size[rootX] += size[rootY];
+            }
+            return true;
+        }
+
+        public int size(int x) {
+            return size[find(x)];
+        }
+    }
+}
